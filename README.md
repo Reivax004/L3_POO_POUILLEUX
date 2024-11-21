@@ -1,38 +1,26 @@
-# Règles
+# L3_POO_REGLES
 
-Le jeu se joue à au moins deux joueurs et comporte un maitre du jeu non joueur.
+# Règles
+Le jeu se joue à trois joueurs et comporte un maître du jeu.
 
 ## Mise en place
-
-Chaque joueur reçoit un nombre déterminé de cartes tirées aléatoirement, qu'il garde face cachée.
+Jeu de 51 cartes sans le Valet de trèfle. Jeu divisé en 2 (J1 = 25 / J2 = 26).
 
 ## Déroulé de la partie
-
-Les joueurs sont répartis dans l'ordre d'arrivée. Chaque joueur affronte le prochain dans un duel, à tour de rôle (le dernier joueur affronte le premier). Si un joueur n'a plus de carte, il perd la partie et ne peut plus joueur.
-
-### Déroulé des duels
-
-* Lors d'un duel, chacun de joueur joue une carte de sa pile. Le joueur ayant joué la carte de plus haute valeur l'emporte et met sous sa pile les cartes jouées, en les mélangeant.
-* Si les deux joueurs ont joué une carte de même valeur, le duel recommence en accumulant les cartes jouées de telle sorte à ce que le gagnant empoche la totalité des cartes du duel.
+Le maître du jeu commence par regarder les paires dans son jeu et ensuite pioche une carte dans le jeu du joueur 2.
+Le maître du jeu vérifie si la partie est terminée. Si c'est le cas, il en informe son adversaire.
 
 ## Fin de la partie
+La partie est terminée lorsqu'un des joueurs n’a plus de cartes en main, il est donc déclaré vainqueur.
 
-Le gagnant est le dernier joueur en lice.
-
-### Détail des classes principales
-
-Un exemple de jeu supportant le réseau
-
-* LocalWarGame la version du jeu supportant le jeu en local
-* WarGameEngine le moteur du jeu
-* WarGameNetorkPlayer le joueur distant en cas de partie réseau
-* WarGameNetworkEngine la version du jeu supportant le réseau
-
+# Détail des classes principales
+* JackHost classe exécutable représentant le maître du jeu
+* JackGuest classe exécutable représentant l'adversaire du maître du jeu
+* JackStandAlone jeu local.
 
 # Protocole réseau
-
 > Le protocole réseau définit les séquences des commandes échangées entre les différentes parties prenantes. Il doit contenir, pour chaque commande, l'expéditeur, le destinataire, le nom de la commande et le contenu du corps de la commande.
+![protocole jack](doc/protocole.png)
 
-![protocole](doc/protocle.png)
-
-
+# Diagramme des classes
+![](doc/class_diagram.png)
