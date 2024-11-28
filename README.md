@@ -25,7 +25,7 @@ La partie est terminée lorsqu'un des joueurs n’a plus de cartes en main, il e
 
 # Protocole réseau
 > Le protocole réseau définit les séquences des commandes échangées entre les différentes parties prenantes. Il doit contenir, pour chaque commande, l'expéditeur, le destinataire, le nom de la commande et le contenu du corps de la commande.
-![protocole jack](POUILLEUX.png)
+![protocole jack](doc/protocole.png)
 
 # Diagramme des classes
 
