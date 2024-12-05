@@ -1,30 +1,25 @@
 package fr.pantheonsorbonne.miage;
 
-
 public class Card {
+    private final Value value; // Valeur de la carte (2, 3, As, Roi, etc...)
+    private final Symbol symbol; // Symbole (Coeur, Carreau, etc...)
 
-    final Value value; // une carte ne change pas de valeur
-    private final Color color; // une carte ne change pas de couleur
-
-    // le constructeur
-    public Card(final Value value, final Color color) {
-        // constructeur qui initialise les attributs finaux
+    public Card(Value value, Symbol symbol) {
         this.value = value;
-        this.color = color;
+        this.symbol = symbol;
     }
 
-    // méthode pour accéder à la valeur d'une carte
     public Value getValue() {
-        return this.value;
+        return value;
     }
 
-    // méthode pour accéder à la couleur d'une carte
-    public Color getColor() {
-        return this.color;
+    public Symbol getSymbol() {
+        return symbol;
     }
 
-    // méthode pour représenter une carte en chaîne de caractères
+    @Override
     public String toString() {
-        return this.value.name() + " of " + this.color.name();
+        return value.name() + " de " + symbol.getName() + " (" + symbol.getColor() + ")";
     }
+    
 }

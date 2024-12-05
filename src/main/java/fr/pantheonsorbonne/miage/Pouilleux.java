@@ -1,6 +1,5 @@
 package fr.pantheonsorbonne.miage;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,60 +8,37 @@ public class Pouilleux {
 
         Player p1 = new Player("Nicolas");
         Player p2 = new Player("Elio");
-        
         Player p3 = new Player("Arthur");
-        //Player p4 = new Player("Eva");
+        Player p4 = new Player("Eva");
 
+        // Crée une liste de joueurs
+        List<Player> players = Arrays.asList(p1, p2, p3, p4);
 
-        //System.out.println(Deck.getRandomCards(2));
-        List<Card> mainOne = Deck.getRandomCards(3);
-        p1.setHand(mainOne);
-
-        List<Card> mainTwo = Deck.getRandomCards(3);
-        p2.setHand(mainTwo);
-        
-        List<Card> mainThree = Deck.getRandomCards(3);
-        p3.setHand(mainThree);
-        
-        //List<Card> mainFour = Deck.getRandomCards(4);
-        //p4.setHand(mainFour);
+        // Distribution des cartes à chaque joueur
+        for (Player player : players) {
+            List<Card> hand = Deck.getRandomCards(players.size());
+            player.setHand(hand);
+        }
 
         // Tirage dans le jeu de chacun
+        for (int i = 0; i < players.size(); i++) {
+            Player currentPlayer = players.get(i);
+            // Le joueur suivant dans la liste, avec rotation (modulo %)
+            Player nextPlayer = players.get((i + 1) % players.size());
+            currentPlayer.pickOneCard(nextPlayer.getHand());
+        }
 
-        p1.pickOneCard(mainTwo);
-        
-        p2.pickOneCard(mainThree);
-        
-        p3.pickOneCard(mainOne);
-
-        
-        System.out.println("Carte du Joueur 1 : ");
-
-        System.out.println(p1.getHandString());
-
-        System.out.println("______________________________"+"\n");
-
-        System.out.println("Carte du Joueur 2 : ");
-
-        System.out.println(p2.getHandString());
-
-        System.out.println("______________________________"+"\n");
-        
-        System.out.println("Carte du Joueur 3 : ");
-
-        System.out.println(p3.getHandString());
-
-        System.out.println("______________________________"+"\n");
-
-        //System.out.println("Carte du Joueur 4 : ");
-
-        //System.out.println(p4.getHandString());
-
-        
-
-
-
-
-
+        // Affichage des cartes pour chaque joueur
+        for (Player player : players) {
+            System.out.println("Carte de " + player.getName() + " :");
+            System.out.println(player.getHandString());     
+            
+        /// Fonction à utiliser dans un "play", pas vraiment utile ici car y'a que 1 tour
+            // player.discardPairs();
+            // System.out.println("Carte de " + player.getName() + " après avoir défaussé les paires :");
+            // System.out.println(player.getHandString());
+            // System.out.println("Il reste " + player.getHand().size() + " cartes dans la main de " + player.getName());
+            // System.out.println("______________________________\n");
+        }
     }
 }

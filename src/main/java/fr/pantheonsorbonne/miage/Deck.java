@@ -1,6 +1,6 @@
 package fr.pantheonsorbonne.miage;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -17,16 +17,13 @@ public class Deck {
         cards = new ArrayList<Card>();
         // itère sur chacune des valeurs possibles des cartes
         for (Value value : Value.values()) {
-            // itère sur chacune des couleurs possibles
-            for (Color color : Color.values()) {
-                if(value.ordinal() == 3 && color.ordinal() == 1 ){
-                    continue;
+            // itère sur chacune des couleurs possibles des cartes
+            for (Symbol symbol : Symbol.ALL) {
+                if (value == Value.DAME && symbol == Symbol.PIQUE) {
+                    continue; // Exemple : exclure la Dame de Pique (Pouilleux)
                 }
-                else{
-                    cards.add(new Card(value, color));
-                } // création et ajout des cartes dans le tableau (deck)
+                cards.add(new Card(value, symbol));
             }
-        
         }
         remainingCardCount = cards.size();
 
@@ -45,24 +42,23 @@ public class Deck {
     static public List<Card> getRandomCards(int nbPlayer) {
         // Les cartes sont bien distribuées si le nombre de joueurs est un diviseur de 51 = {1,3,17,51}
         // Je ne sais pas comment faire quand ce n'est pas le cas
-        int sizeMain;
+        int handSize;
 
-        sizeMain  = remainingCardCount / (nbPlayer - index);
+        handSize  = remainingCardCount / (nbPlayer - index);
         index ++;
         //System.out.println("taille deck = "+cards.size());
 
         // nombre de cartes aléatoires que l'on souhaite tirer du jeu
-        if (remainingCardCount >= sizeMain) {
-            // vérifie s'il y a assez de cartes dans le jeu avant d'en tirer le nombre
-            // demandé
-            List<Card> main = new ArrayList<Card>();
-            for( int i = remainingCardCount-1; i >= remainingCardCount - sizeMain ; i--){
-                main.add(cards.get(i));
+        if (remainingCardCount >= handSize) {
+            // vérifie s'il y a assez de cartes dans le jeu avant d'en tirer le nombre demandé
+            List<Card> hand = new ArrayList<Card>();
+            for( int i = remainingCardCount-1; i >= remainingCardCount - handSize ; i--){
+                hand.add(cards.get(i));
             }
             //System.out.println("Main du joueur en cours "+sizeMain);
-            remainingCardCount -= sizeMain;
+            remainingCardCount -= handSize;
             //System.out.println("nb carte qu'il reste dans le deck "+remainingCardCount); // met à jour le nombre de cartes restantes
-            return main; // retourne les cartes tirées
+            return hand; // retourne les cartes tirées
         }
         List<Card> vide = new ArrayList<Card>();
         return  vide; // s'il n'y a pas assez de cartes, renvoie un tableau vide
