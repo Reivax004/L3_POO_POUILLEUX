@@ -19,8 +19,8 @@ public class Deck {
         for (Value value : Value.values()) {
             // itère sur chacune des couleurs possibles des cartes
             for (Symbol symbol : Symbol.ALL) {
-                if (value == Value.DAME && symbol == Symbol.PIQUE) {
-                    continue; // Exemple : exclure la Dame de Pique (Pouilleux)
+                if (value == Value.VALET && symbol == Symbol.TREFLE) {
+                    continue; // exclure le valet de Trèfle pour que le Pouilleux soit le Valet de Pique
                 }
                 cards.add(new Card(value, symbol));
             }

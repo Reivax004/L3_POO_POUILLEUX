@@ -18,6 +18,12 @@ public class Card {
     }
 
     @Override
+    public boolean equals(Object object) {
+        Card card = (Card) object;
+        return value == card.value && symbol == card.symbol;
+    }
+
+    @Override
     public String toString() {
         return value.name() + " de " + symbol.getName() + " (" + symbol.getColor() + ")";
     }

@@ -37,6 +37,9 @@ public class Player {
 
     // méthode pour afficher la main du joueur en chaîne de caractères
     public String getHandString() {
+        if (hand.isEmpty()) {
+            return "Aucune carte";
+        }
         StringBuilder builder = new StringBuilder();
         for (Card c : this.hand) {
             if (c != null) {
