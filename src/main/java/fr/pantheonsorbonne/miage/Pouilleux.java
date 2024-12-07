@@ -46,12 +46,18 @@ public class Pouilleux {
                 // Le joueur suivant dans la liste, avec modulo %
                 Player nextPlayer = players.get((i + 1) % players.size());
                 currentPlayer.pickOneCard(nextPlayer.getHand());
+                // Défausser les paires après chaque tour
+                if(currentPlayer.discardPairs() == 4){ //Si une paire de 10 est defaussé on passe au prochain
+                    i++;
+                }
+                
             }
 
             // Défausser les paires après chaque tour
+            /*
             for (Player player : players) {
                 player.discardPairs();
-            }
+            }*/
 
             // Affichage des cartes pour chaque joueur
             for (Player player : players) {
@@ -79,3 +85,4 @@ public class Pouilleux {
         }
     }
 }
+//if(player.discardPairs() == 4)

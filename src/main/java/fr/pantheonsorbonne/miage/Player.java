@@ -9,7 +9,6 @@ public class Player {
     final String name; // Le nom du joueur
     private List<Card> hand; // La main du joueur (tableau de cartes)
     private Random random = new Random();
-
     // Constructeur
     public Player(String name) {
         this.name = name;
@@ -69,26 +68,62 @@ public class Player {
     }
 
 
-    public void discardPairs() {
+    public int discardPairs() {
         List<Card> cardsToRemove = new ArrayList<>();
-
+        boolean foundTenPair = false;
         // Vérifie chaque carte pour voir si c'est une paire avec une autre
         for (int i = 0; i < hand.size(); i++) {
             Card card1 = hand.get(i);
             for (int j = i + 1; j < hand.size(); j++) {
                 Card card2 = hand.get(j);
-
                 // Vérifie si les 2 cartes ont la même valeur et la même couleur
                 if (card1.getValue().equals(card2.getValue()) &&
                     card1.getSymbol().getColor().equals(card2.getSymbol().getColor())) {
-                    cardsToRemove.add(card1);
-                    cardsToRemove.add(card2);
+  
+                    if(cardsToRemove.size() == 0){
+
+                        if (card1.getValue().ordinal() > 4) {
+                            cardsToRemove.add(card1);
+                            cardsToRemove.add(card2);
+                        }
+                        else if (card1.getValue().ordinal() == 4) {
+                            foundTenPair = true;
+                            cardsToRemove.add(card1);
+                            cardsToRemove.add(card2);
+                        }
+                        else if (card1.getValue().ordinal() == 3) {
+                            foundTenPair = true;
+                            cardsToRemove.add(card1);
+                            cardsToRemove.add(card2);
+                        }
+                        else if (card1.getValue().ordinal() == 2) {
+                            
+                            cardsToRemove.add(card1);
+                            cardsToRemove.add(card2);
+                        }
+                        else if (card1.getValue().ordinal() == 1) {
+                            
+                            cardsToRemove.add(card1);
+                            cardsToRemove.add(card2);
+                        }
+                        else if (card1.getValue().ordinal() == 0) {
+                            
+                            cardsToRemove.add(card1);
+                            cardsToRemove.add(card2);
+                        }
+                    }
+                       
+                    else if (card1.getValue().ordinal() > 4 && cardsToRemove.get(0).getValue().ordinal() > 4){
+                        cardsToRemove.add(card1);
+                        cardsToRemove.add(card2);
+                    }
+
                 }
             }
         }
-
-        // Retire les cartes à supprimer de la main du joueur
+        System.out.println("le joueur défausse : "+cardsToRemove);
         hand.removeAll(cardsToRemove);
+        return foundTenPair ? 4 : 0;
     }
 
     public void pickOneCard(List<Card> cards) {
