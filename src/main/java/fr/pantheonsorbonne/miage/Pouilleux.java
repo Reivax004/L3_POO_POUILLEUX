@@ -34,31 +34,57 @@ public class Pouilleux {
         }
 
         System.out.println("Début du jeu !\n");
-        int tour = 1;
 
-        // Jouer en boucle jusqu'à ce qu'un joueur n'ait plus de cartes
         for (;;) {
-            System.out.println("Tour " + tour++ + " :");
 
-            // Tirage dans le jeu de chacun
             for (int i = 0; i < players.size(); i++) {
                 Player currentPlayer = players.get(i);
-                // Le joueur suivant dans la liste, avec modulo %
                 Player nextPlayer = players.get((i + 1) % players.size());
+
+                System.out.println("------------------------- Au tour de " + currentPlayer.getName() + " -------------------------");
+                System.out.println(currentPlayer.getName() + " a " + currentPlayer.getHand().size() + " cartes.");
+
                 currentPlayer.pickOneCard(nextPlayer.getHand());
-                // Défausser les paires après chaque tour
-                if(currentPlayer.discardPairs() == 4){ //Si une paire de 10 est defaussé on passe au prochain
-                    i++;
+
+                String pairType = currentPlayer.discardPairs();
+
+                // Gère les effets des paires spéciales
+                if (pairType.equals("Paire de 10")) {
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire de 10, le joueur suivant " + nextPlayer.getName() + " saute son tour.");
+                    i++; // Le joueur suivant saute son tour
+                } else if (pairType.equals("Paire d'As")) {
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire."); // Rouge ou Noir
+                    // TODO : Implémenter l'imposition de couleur
+                } else if (pairType.equals("Paire de Dame")) {
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire de Dame, le sens du jeu est inversé.");
+                    // TODO : Inverser le sens du jeu
+                } else if (pairType.equals("Paire de Roi")) {
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire de Roi, échange de cartes avec un autre joueur.");
+                    currentPlayer.echange2Cartes(currentPlayer, players);
+                } else if (pairType.equals("Paire de Valet")) {
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire de Valet, vol d'une carte.");
+                    currentPlayer.volerCarte(currentPlayer, players);
                 }
-                
+
+                System.out.println(currentPlayer.getName() + " a maintenant " + currentPlayer.getHand().size() + " cartes.");
+
+                // Vérifier si le joueur actif a gagné
+                if (currentPlayer.getHand().isEmpty()) {
+                    System.out.println("\n" + currentPlayer.getName() + " n'a plus de cartes et a gagné !");
+
+                    for (Player pouilleux : players) {
+                        if (pouilleux.getHand().contains(new Card(Value.VALET, Symbol.PIQUE))) {
+                            System.out
+                                    .println(pouilleux.getName() + " est le pouilleux, car il a le Valet de Pique !\n");
+                        }
+                    }
+
+                    return; // Fin de la partie, on sort de la boucle infinie
+                }
+
             }
 
-            // Défausser les paires après chaque tour
-            /*
-            for (Player player : players) {
-                player.discardPairs();
-            }*/
-
+            /*             
             // Affichage des cartes pour chaque joueur
             for (Player player : players) {
                 System.out.println("Cartes de " + player.getName() + " :");
@@ -66,23 +92,8 @@ public class Pouilleux {
                 System.out.println("Le joueur " + player.getName() + " a " + player.getHand().size() + " cartes.");
                 System.out.println("-------------------------------------------------");
             }
+            */
 
-            // Vérifier si un joueur n'a plus de cartes après avoir affiché ses cartes
-            for (Player player : players) {
-                if (player.getHand().isEmpty()) {
-                    System.out.println("\n" + player.getName() + " n'a plus de cartes et a gagné !");
-
-                    // On cherche le second joueur qui sera le pouilleux (celui qui a le Valet de Pique)
-                    for (Player pouilleux : players) {
-                        if (pouilleux.getHand().contains(new Card(Value.VALET, Symbol.PIQUE))) {
-                            System.out.println(pouilleux.getName() + " est le pouilleux, car il a le Valet de Pique !\n");
-                        }
-                    }
-
-                    return; // Fin de la partie, on sort de la boucle infinie
-                }
-            }
         }
     }
 }
-//if(player.discardPairs() == 4)
