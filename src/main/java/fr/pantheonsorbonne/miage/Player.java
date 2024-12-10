@@ -124,6 +124,8 @@ public class Player {
 
         if (cardsToRemove.size() == 0) {
             System.out.println("Le joueur n'a pas de paire.");
+            // String colorMessage = hasImposedColor() ? " avec la couleur imposée " + getImposedColor() : "";
+            // System.out.println(this.name + " n'a pas de paire" + colorMessage + ".");
         } else {
             System.out.println("Le joueur défausse : " + cardsToRemove);
             hand.removeAll(cardsToRemove);
@@ -211,4 +213,5 @@ public class Player {
         joueurCible.getHand().remove(carteVolee);
         System.out.println(joueurActuel.getName() + " vole la carte " + carteVolee + " à " + joueurCible.getName());
     }
+       
 }

@@ -35,6 +35,9 @@ public class Pouilleux {
 
         System.out.println("Début du jeu !\n");
 
+        boolean reverse = false;
+        // int reverseToursRestants = 0;
+
         for (;;) {
 
             for (int i = 0; i < players.size(); i++) {
@@ -54,10 +57,11 @@ public class Pouilleux {
                     i++; // Le joueur suivant saute son tour
                 } else if (pairType.equals("Paire d'As")) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire."); // Rouge ou Noir
-                    // TODO : Implémenter l'imposition de couleur
+                    // currentPlayer.imposeColor(random);
                 } else if (pairType.equals("Paire de Dame")) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Dame, le sens du jeu est inversé.");
-                    // TODO : Inverser le sens du jeu
+                    reverse = !reverse;
+                    // reverseToursRestants = 3; et reverse = true;
                 } else if (pairType.equals("Paire de Roi")) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Roi, échange de cartes avec un autre joueur.");
                     currentPlayer.echange2Cartes(currentPlayer, players);
@@ -65,6 +69,14 @@ public class Pouilleux {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Valet, vol d'une carte.");
                     currentPlayer.volerCarte(currentPlayer, players);
                 }
+
+                /*                 
+                // Gérer les tours de couleur imposée
+                if (currentPlayer.hasImposedColor()) {
+                    System.out.println(currentPlayer.getName() + " doit jouer avec la couleur imposée : " + currentPlayer.getImposedColor());
+                }
+                currentPlayer.decrementImposedColorTurns();
+                */
 
                 System.out.println(currentPlayer.getName() + " a maintenant " + currentPlayer.getHand().size() + " cartes.");
 
@@ -74,12 +86,26 @@ public class Pouilleux {
 
                     for (Player pouilleux : players) {
                         if (pouilleux.getHand().contains(new Card(Value.VALET, Symbol.PIQUE))) {
-                            System.out
-                                    .println(pouilleux.getName() + " est le pouilleux, car il a le Valet de Pique !\n");
+                            System.out.println(pouilleux.getName() + " est le pouilleux, car il a le Valet de Pique !\n");
                         }
                     }
 
                     return; // Fin de la partie, on sort de la boucle infinie
+                }
+
+                if (reverse) {
+                    i -= 2;
+                    if (i < -1) {
+                        i = players.size() - 2;
+                    }
+
+                    /*                 
+                    reverseToursRestants--;
+                    if (reverseToursRestants == 0) {
+                        reverse = false;
+                    System.out.println("Le sens du jeu est revenu à la normale.");
+                    }*/
+
                 }
 
             }
