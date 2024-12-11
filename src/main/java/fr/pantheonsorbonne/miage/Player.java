@@ -18,11 +18,7 @@ public class Player {
 
     // Le joueur reçoit cette main de cartes
     public void setHand(List<Card> deck) {
-        if (deck.size() != 0) {
-            this.hand = deck; // Attribuer les cartes passées en paramètre à la main du joueur
-        } else {
-            System.out.println("La taille de la main ne correspond pas.");
-        }
+        this.hand = deck;
     }
 
     // Méthode pour récupérer la main du joueur
@@ -52,21 +48,6 @@ public class Player {
         return builder.toString().substring(0, builder.length() - 2);
     }
 
-    // méthode pour ajouter des cartes à la main du joueur
-    public void addCard(List<Card> cards) {
-        System.out.println(this.name + " Adding cards in hand: hand before: \n" + this.getHandString());
-        int myHandIndex = 0;
-        for (int i = 0; i < cards.size(); i++) {
-            for (; myHandIndex < this.hand.size(); myHandIndex++) {
-                if (this.hand.get(myHandIndex) == null) {
-                    this.hand.set(myHandIndex, cards.get(i));
-                    break;
-                }
-            }
-
-        }
-        System.out.println(this.name + " Adding cards in hand: hand after: \n" + this.getHandString());
-    }
 
     public String discardPairs() {
         List<Card> cardsToRemove = new ArrayList<>();
@@ -82,11 +63,9 @@ public class Player {
             for (int j = i + 1; j < hand.size(); j++) {
                 Card card2 = hand.get(j);
                 // Vérifie si les 2 cartes ont la même valeur et la même couleur
-                if (card1.getValue().equals(card2.getValue()) &&
-                        card1.getSymbol().getColor().equals(card2.getSymbol().getColor())) {
+                if (card1.getValue().equals(card2.getValue()) && card1.getSymbol().getColor().equals(card2.getSymbol().getColor())) {
 
                     if (cardsToRemove.size() == 0) {
-
                         if (card1.getValue().ordinal() > 4) { // De 9 à Deux
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
@@ -111,21 +90,16 @@ public class Player {
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
                         }
-                    }
-
-                    else if (card1.getValue().ordinal() > 4 && cardsToRemove.get(0).getValue().ordinal() > 4) {
+                    } else if (card1.getValue().ordinal() > 4 && cardsToRemove.get(0).getValue().ordinal() > 4) {
                         cardsToRemove.add(card1);
                         cardsToRemove.add(card2);
                     }
-
                 }
             }
         }
 
         if (cardsToRemove.size() == 0) {
             System.out.println("Le joueur n'a pas de paire.");
-            // String colorMessage = hasImposedColor() ? " avec la couleur imposée " + getImposedColor() : "";
-            // System.out.println(this.name + " n'a pas de paire" + colorMessage + ".");
         } else {
             System.out.println("Le joueur défausse : " + cardsToRemove);
             hand.removeAll(cardsToRemove);
@@ -144,7 +118,6 @@ public class Player {
         } else {
             return "Paire normale";
         }
-
     }
 
     public void pickOneCard(List<Card> handProchainJoueur) {
@@ -157,7 +130,7 @@ public class Player {
             System.out.println("Le joueur suivant n'a plus de cartes.");
             return;
         }
-        
+
         int randomIndex = random.nextInt(handProchainJoueur.size());
         Card card = handProchainJoueur.get(randomIndex);
         handProchainJoueur.remove(card);
@@ -176,7 +149,7 @@ public class Player {
 
         if (joueurActuel.getHand().size() < 2) {
             System.out.println(joueurActuel.getName() + " n'a pas assez de cartes pour échanger.");
-            return; 
+            return;
         }
 
         int indexCarteActuelle1 = random.nextInt(joueurActuel.getHand().size());
@@ -213,5 +186,5 @@ public class Player {
         joueurCible.getHand().remove(carteVolee);
         System.out.println(joueurActuel.getName() + " vole la carte " + carteVolee + " à " + joueurCible.getName());
     }
-       
+
 }

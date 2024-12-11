@@ -36,10 +36,8 @@ public class Pouilleux {
         System.out.println("Début du jeu !\n");
 
         boolean reverse = false;
-        // int reverseToursRestants = 0;
 
         for (;;) {
-
             for (int i = 0; i < players.size(); i++) {
                 Player currentPlayer = players.get(i);
                 Player nextPlayer = players.get((i + 1) % players.size());
@@ -53,15 +51,18 @@ public class Pouilleux {
 
                 // Gère les effets des paires spéciales
                 if (pairType.equals("Paire de 10")) {
-                    System.out.println(currentPlayer.getName() + " a défaussé une paire de 10, le joueur suivant " + nextPlayer.getName() + " saute son tour.");
-                    i++; // Le joueur suivant saute son tour
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire de 10, le joueur suivant, " + nextPlayer.getName() + ", saute son tour.");
+                    if (reverse) {
+                        i++;
+                    } else {
+                        i--;
+                    }
                 } else if (pairType.equals("Paire d'As")) {
-                    System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire."); // Rouge ou Noir
-                    // currentPlayer.imposeColor(random);
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire.");
+                    // currentPlayer.imposeColor();
                 } else if (pairType.equals("Paire de Dame")) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Dame, le sens du jeu est inversé.");
                     reverse = !reverse;
-                    // reverseToursRestants = 3; et reverse = true;
                 } else if (pairType.equals("Paire de Roi")) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Roi, échange de cartes avec un autre joueur.");
                     currentPlayer.echange2Cartes(currentPlayer, players);
@@ -69,14 +70,6 @@ public class Pouilleux {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Valet, vol d'une carte.");
                     currentPlayer.volerCarte(currentPlayer, players);
                 }
-
-                /*                 
-                // Gérer les tours de couleur imposée
-                if (currentPlayer.hasImposedColor()) {
-                    System.out.println(currentPlayer.getName() + " doit jouer avec la couleur imposée : " + currentPlayer.getImposedColor());
-                }
-                currentPlayer.decrementImposedColorTurns();
-                */
 
                 System.out.println(currentPlayer.getName() + " a maintenant " + currentPlayer.getHand().size() + " cartes.");
 
@@ -98,28 +91,8 @@ public class Pouilleux {
                     if (i < -1) {
                         i = players.size() - 2;
                     }
-
-                    /*                 
-                    reverseToursRestants--;
-                    if (reverseToursRestants == 0) {
-                        reverse = false;
-                    System.out.println("Le sens du jeu est revenu à la normale.");
-                    }*/
-
                 }
-
             }
-
-            /*             
-            // Affichage des cartes pour chaque joueur
-            for (Player player : players) {
-                System.out.println("Cartes de " + player.getName() + " :");
-                System.out.println(player.getHandString());
-                System.out.println("Le joueur " + player.getName() + " a " + player.getHand().size() + " cartes.");
-                System.out.println("-------------------------------------------------");
-            }
-            */
-
         }
     }
 }
