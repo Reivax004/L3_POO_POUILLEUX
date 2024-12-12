@@ -129,8 +129,8 @@ public class Player {
         joueurCible1.getHand().set(indexCarteDuJ1, carteAEchanger2);
         joueurCible2.getHand().set(indexCarteDuJ2, carteAEchanger1);
 
-        System.out.println(joueurActuel.getName() + " échange la carte " + carteAEchanger1 + " avec " + joueurCible1.getName() +
-                            " et la carte " + carteAEchanger2 + " avec " + joueurCible2.getName());
+        System.out.println(joueurActuel.getName() + " échange la carte " + carteAEchanger1 + " de " + joueurCible1.getName() +
+                    " avec la carte " + carteAEchanger2 + " de " + joueurCible2.getName());
     }
 
     public void volerCarte(Player joueurActuel, List<Player> joueurs) {
