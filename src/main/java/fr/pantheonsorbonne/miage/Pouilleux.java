@@ -52,9 +52,9 @@ public class Pouilleux {
                 if (pairType.equals(PairType.PAIRE_DE_DIX)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de 10, le joueur suivant, " + nextPlayer.getName() + ", saute son tour.");
                     if (reverse) {
-                        i++;
-                    } else {
                         i--;
+                    } else {
+                        i++;
                     }
                 } else if (pairType.equals(PairType.PAIRE_D_AS)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire.");
@@ -63,7 +63,7 @@ public class Pouilleux {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Dame, le sens du jeu est inversé.");
                     reverse = !reverse;
                 } else if (pairType.equals(PairType.PAIRE_DE_ROI)) {
-                    System.out.println(currentPlayer.getName() + " a défaussé une paire de Roi, échange de cartes avec un autre joueur.");
+                    System.out.println(currentPlayer.getName() + " a défaussé une paire de Roi, le joueur échange 2 cartes entre 2 joueurs.");
                     currentPlayer.echange2Cartes(currentPlayer, players);
                 } else if (pairType.equals(PairType.PAIRE_DE_VALET)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Valet, vol d'une carte.");
@@ -83,7 +83,7 @@ public class Pouilleux {
 
                     return;
                 }
-
+        
                 if (reverse) {
                     i = (i - 2 + players.size()) % players.size();
                 }

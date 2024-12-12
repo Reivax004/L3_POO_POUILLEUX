@@ -118,44 +118,19 @@ public class Player {
     }
 
     public void echange2Cartes(Player joueurActuel, List<Player> joueurs) {
-        if (joueurActuel.getHand().isEmpty()) {
-            System.out.println(joueurActuel.getName() + " n'a plus de cartes à échanger.");
-            return;
-        }
-
         Player joueurCible1 = joueurs.get(random.nextInt(joueurs.size()));
         Player joueurCible2 = joueurs.get(random.nextInt(joueurs.size()));
 
-        if (joueurActuel.getHand().size() < 2) {
-            System.out.println(joueurActuel.getName() + " n'a pas assez de cartes pour échanger.");
-            return;
-        }
+        int indexCarteDuJ1 = random.nextInt(joueurCible1.getHand().size());
+        int indexCarteDuJ2 = random.nextInt(joueurCible2.getHand().size());
+        Card carteAEchanger1 = joueurCible1.getHand().get(indexCarteDuJ1);
+        Card carteAEchanger2 = joueurCible2.getHand().get(indexCarteDuJ2);
+        
+        joueurCible1.getHand().set(indexCarteDuJ1, carteAEchanger2);
+        joueurCible2.getHand().set(indexCarteDuJ2, carteAEchanger1);
 
-        int indexCarteActuelle1 = random.nextInt(joueurActuel.getHand().size());
-        int indexCarteActuelle2 = random.nextInt(joueurActuel.getHand().size());
-        while (indexCarteActuelle1 == indexCarteActuelle2) {
-            indexCarteActuelle2 = random.nextInt(joueurActuel.getHand().size());
-        }
-
-        int indexCarteCible1 = random.nextInt(joueurCible1.getHand().size());
-        int indexCarteCible2 = random.nextInt(joueurCible2.getHand().size());
-        while (indexCarteCible1 == indexCarteCible2) {
-            indexCarteCible2 = random.nextInt(joueurCible2.getHand().size());
-        }
-
-        Card carteAEchanger1 = joueurActuel.getHand().get(indexCarteActuelle1);
-        Card carteAEchanger2 = joueurActuel.getHand().get(indexCarteActuelle2);
-        Card carteCible1 = joueurCible1.getHand().get(indexCarteCible1);
-        Card carteCible2 = joueurCible2.getHand().get(indexCarteCible2);
-
-        joueurActuel.getHand().set(indexCarteActuelle1, carteCible1);
-        joueurActuel.getHand().set(indexCarteActuelle2, carteCible2);
-        joueurCible1.getHand().set(indexCarteCible1, carteAEchanger1);
-        joueurCible2.getHand().set(indexCarteCible2, carteAEchanger2);
-
-        System.out.println(joueurActuel.getName() + " échange les cartes " + carteAEchanger1 + " et " + carteAEchanger2
-                + "\n avec les cartes " + carteCible1 + " de " + joueurCible1.getName() + " et " + carteCible2 + " de "
-                + joueurCible2.getName());
+        System.out.println(joueurActuel.getName() + " échange la carte " + carteAEchanger1 + " avec " + joueurCible1.getName() +
+                            " et la carte " + carteAEchanger2 + " avec " + joueurCible2.getName());
     }
 
     public void volerCarte(Player joueurActuel, List<Player> joueurs) {
