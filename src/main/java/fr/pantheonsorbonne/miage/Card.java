@@ -1,8 +1,10 @@
 package fr.pantheonsorbonne.miage;
 
+import fr.pantheonsorbonne.miage.enums.Value;
+
 public class Card {
-    private final Value value; // Valeur de la carte (2, 3, As, Roi, etc...)
-    private final Symbol symbol; // Symbole (Coeur, Carreau, etc...)
+    private final Value value;
+    private final Symbol symbol;
 
     public Card(Value value, Symbol symbol) {
         this.value = value;
@@ -27,5 +29,5 @@ public class Card {
     public String toString() {
         return value.name() + " de " + symbol.getName() + " (" + symbol.getColor() + ")";
     }
-    
+
 }

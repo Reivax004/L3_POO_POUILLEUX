@@ -3,35 +3,31 @@ package fr.pantheonsorbonne.miage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import fr.pantheonsorbonne.miage.enums.Value;
+import fr.pantheonsorbonne.miage.enums.PairType;
 
 public class Player {
-    // Attributs du joueur
-    final String name; // Le nom du joueur
-    private List<Card> hand; // La main du joueur (tableau de cartes)
+    final String name;
+    private List<Card> hand;
     private Random random = new Random();
 
-    // Constructeur
     public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<Card>(); // Par exemple, une main de 5 cartes
+        this.hand = new ArrayList<Card>();
     }
 
-    // Le joueur reçoit cette main de cartes
     public void setHand(List<Card> deck) {
         this.hand = deck;
     }
 
-    // Méthode pour récupérer la main du joueur
     public List<Card> getHand() {
         return this.hand;
     }
 
-    // Méthode pour récupérer le nom du joueur
     public String getName() {
         return this.name;
     }
 
-    // méthode pour afficher la main du joueur en chaîne de caractères
     public String getHandString() {
         if (hand.isEmpty()) {
             return "Aucune carte";
@@ -49,44 +45,39 @@ public class Player {
     }
 
 
-    public String discardPairs() {
+    public PairType discardPairs() {
         List<Card> cardsToRemove = new ArrayList<>();
-        boolean foundTenPair = false;
-        boolean foundValetPair = false;
-        boolean foundDamePair = false;
-        boolean foundRoiPair = false;
-        boolean foundAsPair = false;
+        PairType pairType = PairType.AUCUNE_PAIRE;
 
-        // Vérifie chaque carte pour voir si c'est une paire avec une autre
         for (int i = 0; i < hand.size(); i++) {
             Card card1 = hand.get(i);
             for (int j = i + 1; j < hand.size(); j++) {
                 Card card2 = hand.get(j);
-                // Vérifie si les 2 cartes ont la même valeur et la même couleur
                 if (card1.getValue().equals(card2.getValue()) && card1.getSymbol().getColor().equals(card2.getSymbol().getColor())) {
 
                     if (cardsToRemove.size() == 0) {
-                        if (card1.getValue().ordinal() > 4) { // De 9 à Deux
+                        if (card1.getValue().ordinal() > 4) {
+                            pairType = PairType.PAIRE_NORMALE;
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
-                        } else if (card1.getValue().ordinal() == 4) { // 10
-                            foundTenPair = true;
+                        } else if (card1.getValue() == Value.DIX) {
+                            pairType = PairType.PAIRE_DE_DIX;
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
-                        } else if (card1.getValue().ordinal() == 3) { // Valet
-                            foundValetPair = true;
+                        } else if (card1.getValue() == Value.VALET) {
+                            pairType = PairType.PAIRE_DE_VALET;
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
-                        } else if (card1.getValue().ordinal() == 2) { // Dame
-                            foundDamePair = true;
+                        } else if (card1.getValue() == Value.DAME) {
+                            pairType = PairType.PAIRE_DE_DAME;
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
-                        } else if (card1.getValue().ordinal() == 1) { // Roi
-                            foundRoiPair = true;
+                        } else if (card1.getValue() == Value.ROI) {
+                            pairType = PairType.PAIRE_DE_ROI;
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
-                        } else if (card1.getValue().ordinal() == 0) { // As
-                            foundAsPair = true;
+                        } else if (card1.getValue() == Value.AS) {
+                            pairType = PairType.PAIRE_D_AS;
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
                         }
@@ -105,19 +96,7 @@ public class Player {
             hand.removeAll(cardsToRemove);
         }
 
-        if (foundAsPair) {
-            return "Paire d'As";
-        } else if (foundRoiPair) {
-            return "Paire de Roi";
-        } else if (foundDamePair) {
-            return "Paire de Dame";
-        } else if (foundValetPair) {
-            return "Paire de Valet";
-        } else if (foundTenPair) {
-            return "Paire de 10";
-        } else {
-            return "Paire normale";
-        }
+        return pairType;
     }
 
     public void pickOneCard(List<Card> handProchainJoueur) {
@@ -156,13 +135,13 @@ public class Player {
         int indexCarteActuelle2 = random.nextInt(joueurActuel.getHand().size());
         while (indexCarteActuelle1 == indexCarteActuelle2) {
             indexCarteActuelle2 = random.nextInt(joueurActuel.getHand().size());
-        } // Vérifie que les cartes à échanger ne sont pas les mêmes
+        }
 
         int indexCarteCible1 = random.nextInt(joueurCible1.getHand().size());
         int indexCarteCible2 = random.nextInt(joueurCible2.getHand().size());
         while (indexCarteCible1 == indexCarteCible2) {
             indexCarteCible2 = random.nextInt(joueurCible2.getHand().size());
-        } // Vérifie que les cartes cibles ne sont pas les mêmes au cas où les joueurs cibles sont le même
+        }
 
         Card carteAEchanger1 = joueurActuel.getHand().get(indexCarteActuelle1);
         Card carteAEchanger2 = joueurActuel.getHand().get(indexCarteActuelle2);

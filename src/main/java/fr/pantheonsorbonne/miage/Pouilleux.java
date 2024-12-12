@@ -3,6 +3,9 @@ package fr.pantheonsorbonne.miage;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.pantheonsorbonne.miage.enums.PairType;
+import fr.pantheonsorbonne.miage.enums.Value;
+
 public class Pouilleux {
 
     public static void main(String... args) {
@@ -11,21 +14,18 @@ public class Pouilleux {
         Player p3 = new Player("Arthur");
         Player p4 = new Player("Eva");
 
-        // Crée une liste de joueurs
         List<Player> players = Arrays.asList(p1, p2, p3, p4);
 
         play(players);
     }
 
     public static void play(List<Player> players) {
-        // Distribution des cartes à chaque joueur
         for (Player player : players) {
             List<Card> hand = Deck.getRandomCards(players.size());
             player.setHand(hand);
             System.out.println(player.getName() + " a reçu " + player.getHand().size() + " cartes.");
         }
 
-        // Afficher les cartes initiales de chaque joueur
         System.out.println("\nCartes initiales des joueurs :");
         for (Player player : players) {
             System.out.println(player.getName() + " a reçu :");
@@ -47,33 +47,31 @@ public class Pouilleux {
 
                 currentPlayer.pickOneCard(nextPlayer.getHand());
 
-                String pairType = currentPlayer.discardPairs();
+                PairType pairType = currentPlayer.discardPairs();
 
-                // Gère les effets des paires spéciales
-                if (pairType.equals("Paire de 10")) {
+                if (pairType.equals(PairType.PAIRE_DE_DIX)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de 10, le joueur suivant, " + nextPlayer.getName() + ", saute son tour.");
                     if (reverse) {
                         i++;
                     } else {
                         i--;
                     }
-                } else if (pairType.equals("Paire d'As")) {
+                } else if (pairType.equals(PairType.PAIRE_D_AS)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire.");
                     // currentPlayer.imposeColor();
-                } else if (pairType.equals("Paire de Dame")) {
+                } else if (pairType.equals(PairType.PAIRE_DE_DAME)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Dame, le sens du jeu est inversé.");
                     reverse = !reverse;
-                } else if (pairType.equals("Paire de Roi")) {
+                } else if (pairType.equals(PairType.PAIRE_DE_ROI)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Roi, échange de cartes avec un autre joueur.");
                     currentPlayer.echange2Cartes(currentPlayer, players);
-                } else if (pairType.equals("Paire de Valet")) {
+                } else if (pairType.equals(PairType.PAIRE_DE_VALET)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Valet, vol d'une carte.");
                     currentPlayer.volerCarte(currentPlayer, players);
                 }
 
                 System.out.println(currentPlayer.getName() + " a maintenant " + currentPlayer.getHand().size() + " cartes.");
 
-                // Vérifier si le joueur actif a gagné
                 if (currentPlayer.getHand().isEmpty()) {
                     System.out.println("\n" + currentPlayer.getName() + " n'a plus de cartes et a gagné !");
 
@@ -83,14 +81,11 @@ public class Pouilleux {
                         }
                     }
 
-                    return; // Fin de la partie, on sort de la boucle infinie
+                    return;
                 }
 
                 if (reverse) {
-                    i -= 2;
-                    if (i < -1) {
-                        i = players.size() - 2;
-                    }
+                    i = (i - 2 + players.size()) % players.size();
                 }
             }
         }

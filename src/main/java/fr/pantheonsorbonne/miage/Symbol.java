@@ -3,8 +3,8 @@ package fr.pantheonsorbonne.miage;
 import java.util.List;
 
 public class Symbol {
-    private final String name; // Nom du symbole (Coeur, Carreau, etc.)
-    private final String color; // Couleur associée (Rouge ou Noir)
+    private final String name;
+    private final String color;
 
     public Symbol(String name, String color) {
         this.name = name;
