@@ -37,6 +37,12 @@ public class Pouilleux {
 
         boolean reverse = false;
 
+        int NbToursCouleur = 0;
+        
+        boolean imposeColor = false;
+
+        String colorCurrent = null;
+
         for (;;) {
             for (int i = 0; i < players.size(); i++) {
                 Player currentPlayer = players.get(i);
@@ -47,8 +53,20 @@ public class Pouilleux {
 
                 currentPlayer.pickOneCard(nextPlayer.getHand());
 
-                PairType pairType = currentPlayer.discardPairs();
+                PairType pairType;
 
+                
+                if(imposeColor && NbToursCouleur % players.size() != 0){
+                    pairType = currentPlayer.discardPairs(imposeColor,colorCurrent);
+                    NbToursCouleur++;
+                }
+                else{
+                    imposeColor = false;
+                    colorCurrent = null;
+                    pairType = currentPlayer.discardPairs(imposeColor,colorCurrent);
+                    NbToursCouleur = 1;
+                }
+                
                 if (pairType.equals(PairType.PAIRE_DE_DIX)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de 10, le joueur suivant, " + nextPlayer.getName() + ", saute son tour.");
                     if (reverse) {
@@ -58,7 +76,10 @@ public class Pouilleux {
                     }
                 } else if (pairType.equals(PairType.PAIRE_D_AS)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire d'As, imposant une couleur de paire.");
-                    // currentPlayer.imposeColor();
+                    imposeColor = true;
+                    colorCurrent = currentPlayer.getLastDiscardColor();
+                    NbToursCouleur = 1;
+
                 } else if (pairType.equals(PairType.PAIRE_DE_DAME)) {
                     System.out.println(currentPlayer.getName() + " a défaussé une paire de Dame, le sens du jeu est inversé.");
                     reverse = !reverse;
@@ -83,7 +104,6 @@ public class Pouilleux {
 
                     return;
                 }
-        
                 if (reverse) {
                     i = (i - 2 + players.size()) % players.size();
                 }

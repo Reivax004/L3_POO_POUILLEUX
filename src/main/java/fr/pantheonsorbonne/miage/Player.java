@@ -10,6 +10,7 @@ public class Player {
     final String name;
     private List<Card> hand;
     private Random random = new Random();
+    private List<Card> discardedPairs = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
@@ -45,59 +46,124 @@ public class Player {
     }
 
 
-    public PairType discardPairs() {
+    public PairType discardPairs(boolean imposeColor, String colorCurrent) {
         List<Card> cardsToRemove = new ArrayList<>();
         PairType pairType = PairType.AUCUNE_PAIRE;
-
         for (int i = 0; i < hand.size(); i++) {
             Card card1 = hand.get(i);
             for (int j = i + 1; j < hand.size(); j++) {
                 Card card2 = hand.get(j);
                 if (card1.getValue().equals(card2.getValue()) && card1.getSymbol().getColor().equals(card2.getSymbol().getColor())) {
+                    System.out.println(card1.getValue()+" "+card1.getSymbol().getColor());
+                    if(imposeColor == true){
+                        
+                        if(card1.getSymbol().getColor().equals(colorCurrent)){
+                            
+                            if (cardsToRemove.size() == 0) {
+                                
+                                if (card1.getValue().ordinal() > 4) {
+                                    pairType = PairType.PAIRE_NORMALE;
+                                    cardsToRemove.add(card1);
+                                    cardsToRemove.add(card2);
+                                } else if (card1.getValue() == Value.DIX) {
+                                    pairType = PairType.PAIRE_DE_DIX;
+                                    cardsToRemove.add(card1);
+                                    cardsToRemove.add(card2);
+                                } else if (card1.getValue() == Value.VALET) {
+                                    pairType = PairType.PAIRE_DE_VALET;
+                                    cardsToRemove.add(card1);
+                                    cardsToRemove.add(card2);
+                                } else if (card1.getValue() == Value.DAME) {
+                                    pairType = PairType.PAIRE_DE_DAME;
+                                    cardsToRemove.add(card1);
+                                    cardsToRemove.add(card2);
+                                } else if (card1.getValue() == Value.ROI) {
+                                    pairType = PairType.PAIRE_DE_ROI;
+                                    cardsToRemove.add(card1);
+                                    cardsToRemove.add(card2);
+                                } else if (card1.getValue() == Value.AS) {
+                                    pairType = PairType.PAIRE_D_AS;
+                                    colorCurrent = card1.getSymbol().getColor();
+                                    cardsToRemove.add(card1);
+                                    cardsToRemove.add(card2);
+                                }
+                            } 
+                            else if (card1.getValue().ordinal() > 4 && cardsToRemove.get(0).getValue().ordinal() > 4) {
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            }
+                        }
+                        else{
+                            continue;
+                        }
 
-                    if (cardsToRemove.size() == 0) {
-                        if (card1.getValue().ordinal() > 4) {
-                            pairType = PairType.PAIRE_NORMALE;
-                            cardsToRemove.add(card1);
-                            cardsToRemove.add(card2);
-                        } else if (card1.getValue() == Value.DIX) {
-                            pairType = PairType.PAIRE_DE_DIX;
-                            cardsToRemove.add(card1);
-                            cardsToRemove.add(card2);
-                        } else if (card1.getValue() == Value.VALET) {
-                            pairType = PairType.PAIRE_DE_VALET;
-                            cardsToRemove.add(card1);
-                            cardsToRemove.add(card2);
-                        } else if (card1.getValue() == Value.DAME) {
-                            pairType = PairType.PAIRE_DE_DAME;
-                            cardsToRemove.add(card1);
-                            cardsToRemove.add(card2);
-                        } else if (card1.getValue() == Value.ROI) {
-                            pairType = PairType.PAIRE_DE_ROI;
-                            cardsToRemove.add(card1);
-                            cardsToRemove.add(card2);
-                        } else if (card1.getValue() == Value.AS) {
-                            pairType = PairType.PAIRE_D_AS;
+
+                        
+                    }
+                    else{
+                        if (cardsToRemove.size() == 0) {
+                            if (card1.getValue().ordinal() > 4) {
+                                pairType = PairType.PAIRE_NORMALE;
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            } else if (card1.getValue() == Value.DIX) {
+                                pairType = PairType.PAIRE_DE_DIX;
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            } else if (card1.getValue() == Value.VALET) {
+                                pairType = PairType.PAIRE_DE_VALET;
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            } else if (card1.getValue() == Value.DAME) {
+                                pairType = PairType.PAIRE_DE_DAME;
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            } else if (card1.getValue() == Value.ROI) {
+                                pairType = PairType.PAIRE_DE_ROI;
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            } else if (card1.getValue() == Value.AS) {
+                                pairType = PairType.PAIRE_D_AS;
+                                colorCurrent = card1.getSymbol().getColor();
+                                cardsToRemove.add(card1);
+                                cardsToRemove.add(card2);
+                            }
+                        } 
+                        else if (card1.getValue().ordinal() > 4 && cardsToRemove.get(0).getValue().ordinal() > 4) {
                             cardsToRemove.add(card1);
                             cardsToRemove.add(card2);
                         }
-                    } else if (card1.getValue().ordinal() > 4 && cardsToRemove.get(0).getValue().ordinal() > 4) {
-                        cardsToRemove.add(card1);
-                        cardsToRemove.add(card2);
                     }
+                
                 }
+            
             }
+        
         }
-
+        if (pairType == PairType.PAIRE_D_AS) {
+            discardedPairs.addAll(cardsToRemove);
+        }
+        
+        System.out.println(colorCurrent);
         if (cardsToRemove.size() == 0) {
             System.out.println("Le joueur n'a pas de paire.");
-        } else {
+        } 
+        else {
             System.out.println("Le joueur défausse : " + cardsToRemove);
             hand.removeAll(cardsToRemove);
         }
 
         return pairType;
     }
+
+    public String getLastDiscardColor() {
+        if (discardedPairs.size() >= 2) {
+            Card lastDiscardedCard = discardedPairs.get(discardedPairs.size() - 1);
+            return lastDiscardedCard.getSymbol().getColor();
+        }
+        return null;
+    }
+
 
     public void pickOneCard(List<Card> handProchainJoueur) {
         if (this.getHand().isEmpty()) {
@@ -140,5 +206,4 @@ public class Player {
         joueurCible.getHand().remove(carteVolee);
         System.out.println(joueurActuel.getName() + " vole la carte " + carteVolee + " à " + joueurCible.getName());
     }
-
 }

@@ -22,12 +22,14 @@ public class PlayerTest {
             Card NeufCarreau = new Card(Value.NEUF, Symbol.CARREAU);
             Card AsCoeur  = new Card(Value.AS, Symbol.COEUR);
             List<Card> main = new ArrayList<>();
+            boolean imposeColor = false;
+            String colorCurrent = null;
             main.add(AsCarreau);
             main.add(NeufCarreau);
             main.add(AsCoeur);
             Player p1 = new Player("Nicolas");
             p1.setHand(main);
-            assertEquals(p1.discardPairs(), PairType.PAIRE_D_AS);
+            assertEquals(p1.discardPairs(imposeColor, colorCurrent), PairType.PAIRE_D_AS);
         }
     }
 }
