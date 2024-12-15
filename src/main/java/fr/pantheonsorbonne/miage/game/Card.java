@@ -1,4 +1,4 @@
-package fr.pantheonsorbonne.miage;
+package fr.pantheonsorbonne.miage.game;
 
 import fr.pantheonsorbonne.miage.enums.Value;
 

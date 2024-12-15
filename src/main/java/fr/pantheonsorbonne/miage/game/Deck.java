@@ -1,4 +1,4 @@
-package fr.pantheonsorbonne.miage;
+package fr.pantheonsorbonne.miage.game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,6 @@ public class Deck {
 
     static public List<Card> getRandomCards(int nbPlayer) {
         int handSize;
-
         handSize  = remainingCardCount / (nbPlayer - index);
         index ++;
 

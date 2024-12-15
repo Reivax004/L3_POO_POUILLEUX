@@ -1,7 +1,5 @@
 package fr.pantheonsorbonne.miage.game;
 
-import fr.pantheonsorbonne.miage.Card;
-import fr.pantheonsorbonne.miage.Deck;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

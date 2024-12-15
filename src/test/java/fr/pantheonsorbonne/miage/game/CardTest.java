@@ -2,10 +2,7 @@ package fr.pantheonsorbonne.miage.game;
 
 import org.junit.jupiter.api.Test;
 
-import fr.pantheonsorbonne.miage.Symbol;
 import fr.pantheonsorbonne.miage.enums.Value;
-import fr.pantheonsorbonne.miage.Card;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
