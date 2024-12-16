@@ -1,4 +1,4 @@
-/*package fr.pantheonsorbonne.miage.engine.net;
+package fr.pantheonsorbonne.miage.engine.net;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,22 +28,30 @@ public class PouilleuxGuest {
         playerFacade.waitReady();
         playerFacade.createNewPlayer(playerId);
         pouilleux = playerFacade.autoJoinGame("POUILLEUX");
-        /*
+        
         while (true) {
             GameCommand command = playerFacade.receiveGameCommand(pouilleux);
         
             if ("cardsForYou".equals(command.name())) {
-                handleCardsForYou(command);
-            } else if ("playACard".equals(command.name())) {
+                System.out.println("MON GROS");
+                break;
+                //handleCardsForYou(command);
+            } /*else if ("playACard".equals(command.name())) {
                 System.out.println("I have " + hand.stream().map(Card::toFancyString).collect(Collectors.joining(" ")));
                 handlePlayACard(command);
             } else if ("gameOver".equals(command.name())) {
                 handleGameOverCommand(command);
             } else {
                 System.out.println("Unknown command: " + command.name());
-            }
+            }*/
         }
-    }
-
+    }/* 
+    private static void handleCardsForYou(GameCommand command) {
+        Card[] cardsInHand = Card.getStringToCards(command.body());
+        for (int i = 0; i < cardsInHand.length; i++) {
+            networkPlayer.hand.addFirst(cardsInHand[i]);
+            System.out.print(Card.valueOfCard(networkPlayer.hand.getFirst()));
+        }
+    }*/
     
-}*/
+}

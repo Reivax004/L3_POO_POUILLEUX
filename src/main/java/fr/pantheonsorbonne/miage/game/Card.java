@@ -1,5 +1,7 @@
 package fr.pantheonsorbonne.miage.game;
 
+import java.util.List;
+
 import fr.pantheonsorbonne.miage.enums.Value;
 
 public class Card {
@@ -28,6 +30,16 @@ public class Card {
     @Override
     public String toString() {
         return value.name() + " de " + symbol.getName() + " (" + symbol.getColor() + ")";
+    }
+    public static String cardsToString(List<Card> cards) {
+    String carte = "\n";
+    for (Card card : cards) {
+        carte += Card.valueOfCard(card) + "\n";
+    }
+    return carte;
+    }
+    public static String valueOfCard(Card card) {
+        return card.getValue()+ " " +card.getSymbol().getColor();
     }
 
 }

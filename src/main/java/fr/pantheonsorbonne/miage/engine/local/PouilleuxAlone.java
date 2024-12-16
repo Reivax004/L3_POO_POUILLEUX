@@ -13,6 +13,7 @@ import fr.pantheonsorbonne.miage.enums.Value;
 public class PouilleuxAlone extends PouilleuxGameEngine {
 
     private final List<String> playerNames;
+    
     //private final Map<String, Queue<Card>> playerCards = new HashMap<>();
 
     public PouilleuxAlone(Deck deck, int nbPlayer, List<String> playerNames) {
@@ -272,35 +273,34 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
     
         System.out.println(currentPlayer + " a volé la carte " + stolenCard + " à " + targetPlayer + ".");
     }
-    protected void handlePaireDeDix(String currentPlayer, String nextPlayer, int i, boolean reverse){
-        System.out.println(currentPlayer+ " a défaussé une paire de 10, le joueur suivant, " + nextPlayer + ", saute son tour.");
-        if (reverse) {
-            i--;
-        } else {
-            i++;
-        }
-    }
-    protected void handlePaireDAs(String currentPlayer, boolean imposeColor, String colorCurrent, int nbToursCouleur){
-        System.out.println(currentPlayer+ " a défaussé une paire d'As, imposant une couleur de paire.");
-        imposeColor = true;
-        colorCurrent = getLastDiscardColor(currentPlayer);
-        nbToursCouleur = 1;
+    @Override
+    protected void handlePaireDeDix(String currentPlayer, String nextPlayer) {
+        System.out.println("Paire de 10! Le joueur suivant perd son tour.");
+        // La logique est gérée dans l'implémentation de `playTurn`
     }
 
-    protected void handlePaireDeDame(String currentPlayer, boolean reverse){
-        System.out.println(currentPlayer+ " a défaussé une paire de Dame, le sens du jeu est inversé.");
-        reverse = !reverse;
+    @Override
+    protected void handlePaireDeDame() {
+        System.out.println("Paire de dame! Sens de jeu inversé.");
     }
 
-    protected void handlePaireDeRoi(String currentPlayer){
-        System.out.println(currentPlayer+ " a défaussé une paire de Roi, le joueur échange 2 cartes entre 2 joueurs.");
+    @Override
+    protected void handlePaireDAs(String currentPlayer, String color) {
+        System.out.println(currentPlayer + " impose une couleur: " + color + ".");
+    }
+
+    @Override
+    protected void handlePaireDeRoi(String currentPlayer) {
+        System.out.println(currentPlayer + " vole une carte à un autre joueur.");
+        volerCarte(currentPlayer);
+    }
+
+    @Override
+    protected void handlePaireDeValet(String currentPlayer) {
+        System.out.println(currentPlayer + " échange deux cartes avec un autre joueur.");
         switchTwoCards(currentPlayer);
     }
 
-    protected void handlePaireDeValet(String currentPlayer){
-        System.out.println(currentPlayer+ " a défaussé une paire de Valet, vol d'une carte.");
-        volerCarte(currentPlayer);
-    }
 }   
 
 
