@@ -30,15 +30,14 @@ public abstract class PouilleuxGameEngine {
     protected abstract void giveCardsToPlayer(String player);
 
     protected void initGame(){
-        System.out.println("Cartes initiales des joueurs :");
+        //System.out.println("Cartes initiales des joueurs :");
         for (String player : getInitialPlayers()) {
+            //System.out.println(player + " a :");
             giveCardsToPlayer(player);
-            System.out.println(player + " a :");
-            System.out.println(getHandString(player));
-            System.out.println("-------------------------------------------------");
+            //System.out.println("-------------------------------------------------");
         }
 
-        System.out.println("Début du jeu !\n");
+        //System.out.println("Début du jeu !\n");
     }
     
     protected void playTurn(){
@@ -56,21 +55,21 @@ public abstract class PouilleuxGameEngine {
                 String nextPlayer = players.get((currentIndex + 1) % players.size());
 
                 System.out.println("------------------------- Au tour de " + currentPlayer + " -------------------------");
-                System.out.println(currentPlayer + " a " + playerCards.get(currentPlayer).size() + " cartes.");
 
                 pickOneCard(currentPlayer, nextPlayer);
-
+                
                 PairType pairType;
-                if (imposeColor && nbToursCouleur % getInitialPlayers().size() != 0) {
+                if (imposeColor && nbToursCouleur % players.size() != 0) {
                     pairType = discardPairs(currentPlayer, imposeColor, colorCurrent);
                     nbToursCouleur++;
-                } else {
+                } 
+                else {
                     imposeColor = false;
                     colorCurrent = null;
                     pairType = discardPairs(currentPlayer, imposeColor, colorCurrent);
                     nbToursCouleur = 1;
                 }
-
+                
                 if(isWinner(currentPlayer)){
                     System.out.println("\n" + currentPlayer + " n'a plus de cartes et a gagné !");
                     WhoIsLooser();
@@ -78,29 +77,28 @@ public abstract class PouilleuxGameEngine {
                 }
                 switch (pairType) {
                     case PAIRE_DE_DIX:
-                        handlePaireDeDix(currentPlayer, nextPlayer);
+                        //handlePaireDeDix(currentPlayer, nextPlayer);
                         currentIndex = handleSkipTurn(players, currentIndex, reverse);
                         break;
                     case PAIRE_D_AS:
                         imposeColor = true;
                         colorCurrent = getLastDiscardColor(currentPlayer);
                         nbToursCouleur = 1;
-                        handlePaireDAs(currentPlayer, colorCurrent);
+                        //handlePaireDAs(currentPlayer, colorCurrent);
                         break;
                     case PAIRE_DE_DAME:
                         reverse = !reverse;
-                        handlePaireDeDame();
+                        //handlePaireDeDame();
                         break;
                     case PAIRE_DE_ROI:
-                        handlePaireDeRoi(currentPlayer);
+                        //handlePaireDeRoi(currentPlayer);
                         break;
                     case PAIRE_DE_VALET:
-                        handlePaireDeValet(currentPlayer);
+                        //handlePaireDeValet(currentPlayer);
                         break;
                     default:
                         break;
                 }
-                System.out.println(currentPlayer + " a maintenant " + playerCards.get(currentPlayer).size() + " cartes.");
                 currentIndex = getNextPlayerIndex(players.size(), currentIndex, reverse);
         }
     }

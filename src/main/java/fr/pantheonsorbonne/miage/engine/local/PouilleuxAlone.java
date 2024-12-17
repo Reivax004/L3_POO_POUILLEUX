@@ -38,6 +38,8 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
     protected void giveCardsToPlayer(String player){
         Queue<Card> hand = new LinkedList<>(Deck.getRandomCards(nbPlayer));
         playerCards.put(player, hand);
+        System.out.println("Cartes du joueur : ");
+        System.out.println(getHandString(player));
 
     }
     @Override

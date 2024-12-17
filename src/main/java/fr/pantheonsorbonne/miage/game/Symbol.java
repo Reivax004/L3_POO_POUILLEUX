@@ -22,8 +22,10 @@ public class Symbol {
     public static final Symbol COEUR = new Symbol("Coeur", "Rouge");
     public static final Symbol CARREAU = new Symbol("Carreau", "Rouge");
     public static final Symbol PIQUE = new Symbol("Pique", "Noir");
-    public static final Symbol TREFLE = new Symbol("Trèfle", "Noir");
+    public static final Symbol TREFLE = new Symbol("Trefle", "Noir");
 
     public static final List<Symbol> ALL = List.of(COEUR, CARREAU, PIQUE, TREFLE);
 
+    
+    
 }
