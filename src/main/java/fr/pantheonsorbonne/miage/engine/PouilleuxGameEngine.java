@@ -2,10 +2,8 @@ package fr.pantheonsorbonne.miage.engine;
 
 import java.util.*;
 import fr.pantheonsorbonne.miage.enums.PairType;
-import fr.pantheonsorbonne.miage.enums.Value;
 import fr.pantheonsorbonne.miage.game.Card;
 import fr.pantheonsorbonne.miage.game.Deck;
-import fr.pantheonsorbonne.miage.game.Symbol;
 
 public abstract class PouilleuxGameEngine {
 
@@ -23,6 +21,7 @@ public abstract class PouilleuxGameEngine {
     public void play() {
         initGame();
         playTurn();
+        System.out.println("Fin de jeu");
     }
 
     protected abstract List<String> getInitialPlayers();
@@ -30,14 +29,9 @@ public abstract class PouilleuxGameEngine {
     protected abstract void giveCardsToPlayer(String player);
 
     protected void initGame(){
-        //System.out.println("Cartes initiales des joueurs :");
         for (String player : getInitialPlayers()) {
-            //System.out.println(player + " a :");
             giveCardsToPlayer(player);
-            //System.out.println("-------------------------------------------------");
         }
-
-        //System.out.println("Début du jeu !\n");
     }
     
     protected void playTurn(){
@@ -53,11 +47,15 @@ public abstract class PouilleuxGameEngine {
         for (;;) {
                 String currentPlayer = players.get(currentIndex);
                 String nextPlayer = players.get((currentIndex + 1) % players.size());
-
-                System.out.println("------------------------- Au tour de " + currentPlayer + " -------------------------");
+                System.out.println("C'est au tour de " + currentPlayer);
+                if(isWinner(currentPlayer) == true || isWinner(nextPlayer) == true){
+                    WhoIsLooser();
+                    return;
+                }
 
                 pickOneCard(currentPlayer, nextPlayer);
-                
+
+
                 PairType pairType;
                 if (imposeColor && nbToursCouleur % players.size() != 0) {
                     pairType = discardPairs(currentPlayer, imposeColor, colorCurrent);
@@ -70,28 +68,23 @@ public abstract class PouilleuxGameEngine {
                     nbToursCouleur = 1;
                 }
                 
-                if(isWinner(currentPlayer)){
-                    System.out.println("\n" + currentPlayer + " n'a plus de cartes et a gagné !");
-                    WhoIsLooser();
-                    return;
-                }
                 switch (pairType) {
                     case PAIRE_DE_DIX:
-                        //handlePaireDeDix(currentPlayer, nextPlayer);
+                        handlePaireDeDix(currentPlayer, nextPlayer);
                         currentIndex = handleSkipTurn(players, currentIndex, reverse);
                         break;
                     case PAIRE_D_AS:
                         imposeColor = true;
                         colorCurrent = getLastDiscardColor(currentPlayer);
                         nbToursCouleur = 1;
-                        //handlePaireDAs(currentPlayer, colorCurrent);
+                        handlePaireDAs(currentPlayer, colorCurrent);
                         break;
                     case PAIRE_DE_DAME:
                         reverse = !reverse;
-                        //handlePaireDeDame();
+                        handlePaireDeDame();
                         break;
                     case PAIRE_DE_ROI:
-                        //handlePaireDeRoi(currentPlayer);
+                        handlePaireDeRoi(currentPlayer);
                         break;
                     case PAIRE_DE_VALET:
                         //handlePaireDeValet(currentPlayer);
@@ -104,7 +97,12 @@ public abstract class PouilleuxGameEngine {
     }
 
     private int handleSkipTurn(List<String> players, int currentIndex, boolean reverse) {
-        return getNextPlayerIndex(players.size(), getNextPlayerIndex(players.size(), currentIndex, reverse), reverse);
+        if (reverse) {
+            currentIndex--;
+        } else {
+            currentIndex++;
+        }
+        return currentIndex;
     }
 
     private int getNextPlayerIndex(int totalPlayers, int currentIndex, boolean reverse) {
@@ -121,8 +119,6 @@ public abstract class PouilleuxGameEngine {
 
     abstract protected void WhoIsLooser();
 
-    abstract protected String getHandString(String player);
-
     abstract protected void pickOneCard(String currentPlayer, String nextPlayer);
 
     abstract protected PairType discardPairs(String player, boolean imposeColor, String colorCurrent);
@@ -131,7 +127,7 @@ public abstract class PouilleuxGameEngine {
 
     abstract protected void switchTwoCards(String currentPlayer);
 
-    abstract protected void volerCarte(String currentPlayer);  
+    abstract protected void stealCard(String currentPlayer);  
     
     protected abstract void handlePaireDeDix(String currentPlayer, String nextPlayer);
 

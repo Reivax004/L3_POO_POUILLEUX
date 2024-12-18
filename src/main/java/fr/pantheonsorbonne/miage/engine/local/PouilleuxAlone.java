@@ -13,13 +13,10 @@ import fr.pantheonsorbonne.miage.enums.Value;
 public class PouilleuxAlone extends PouilleuxGameEngine {
 
     private final List<String> playerNames;
-    
-    //private final Map<String, Queue<Card>> playerCards = new HashMap<>();
 
     public PouilleuxAlone(Deck deck, int nbPlayer, List<String> playerNames) {
         super(deck, nbPlayer);
         this.playerNames = playerNames;
-        //this.playerCards = playerCards;
     }
 
     public static void main(String... args) {
@@ -38,25 +35,18 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
     protected void giveCardsToPlayer(String player){
         Queue<Card> hand = new LinkedList<>(Deck.getRandomCards(nbPlayer));
         playerCards.put(player, hand);
-        System.out.println("Cartes du joueur : ");
-        System.out.println(getHandString(player));
-
-    }
-    @Override
-    protected String getHandString(String player){
-        Queue<Card> hand = playerCards.get(player);
-        if (hand.isEmpty()) {
-            return "Aucune carte";
-        }
+        System.out.println("Cartes du joueur : "+player);
         StringBuilder builder = new StringBuilder();
         for (Card c : hand) {
             builder.append("\t - ").append(c).append("\n");
         }
-        return builder.toString().trim();
+        System.out.println(builder.toString().trim());
+
     }
     @Override
     protected boolean isWinner(String currentPlayer){
         if (playerCards.get(currentPlayer).isEmpty()) {
+            System.out.println("Le gagnant est "+currentPlayer+", car il n'a plus aucune cartes en main.");
             return true;
         }
         return false;
@@ -65,7 +55,7 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
     protected void WhoIsLooser(){
         for (String pouilleux : getInitialPlayers()) {
             if (playerCards.get(pouilleux).contains(new Card(Value.VALET, Symbol.PIQUE))) {
-                System.out.println(pouilleux + " est le pouilleux, car il a le Valet de Pique !\n");
+                System.out.println(pouilleux + " est le pouilleux, car "+pouilleux+" a le Valet de Pique !\n");
             }
         }
     }
@@ -107,7 +97,6 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
             for (int j = i + 1; j < handList.size(); j++) {
                 Card card2 = handList.get(j);
                 if (card1.getValue().equals(card2.getValue()) && card1.getSymbol().getColor().equals(card2.getSymbol().getColor())) {
-                    System.out.println(card1.getValue()+" "+card1.getSymbol().getColor());
                     if(imposeColor){
                         
                         if(card1.getSymbol().getColor().equals(colorCurrent)){
@@ -147,7 +136,6 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
                             }
                         }
                         else{
-                            //System.out.println(card1.getValue()+" "+card1.getSymbol().getColor());
                             continue;
                         }
    
@@ -195,8 +183,6 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
         if (pairType == PairType.PAIRE_D_AS) {
             discardedPairs.addAll(cardsToRemove);
         }
-        
-        System.out.println(colorCurrent);
         if (cardsToRemove.size() == 0) {
             System.out.println("Le joueur n'a pas de paire.");
         } 
@@ -222,7 +208,7 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
         List<String> otherPlayers = new ArrayList<>(playerCards.keySet());
         otherPlayers.remove(currentPlayer);
         if (otherPlayers.size() < 2) {
-            System.out.println("Pas assez de joueurs pour un échange.");
+            System.out.println("Pas assez de joueurs pour un échange");
             return;
         }
     
@@ -236,7 +222,7 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
         Queue<Card> hand2 = playerCards.get(player2);
     
         if (hand1.isEmpty() || hand2.isEmpty()) {
-            System.out.println("L'échange n'est pas possible car l'un des joueurs n'a pas de cartes.");
+            System.out.println("L'échange n'est pas possible car l'un des joueurs n'a pas de cartes");
             return;
         }
         Card card1 = ((LinkedList<Card>) hand1).removeFirst();
@@ -250,7 +236,7 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
         System.out.println(player2 + " reçoit " + card1);
     }
     @Override
-    protected void volerCarte(String currentPlayer) {
+    protected void stealCard(String currentPlayer) {
         Random random = new Random();
     
         List<String> otherPlayers = new ArrayList<>(playerCards.keySet());
@@ -277,13 +263,12 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
     }
     @Override
     protected void handlePaireDeDix(String currentPlayer, String nextPlayer) {
-        System.out.println("Paire de 10! Le joueur suivant perd son tour.");
-        // La logique est gérée dans l'implémentation de `playTurn`
+        System.out.println("Le joueur suivant perd son tour.");
     }
 
     @Override
     protected void handlePaireDeDame() {
-        System.out.println("Paire de dame! Sens de jeu inversé.");
+        System.out.println("Sens de jeu inversé.");
     }
 
     @Override
@@ -294,7 +279,7 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
     @Override
     protected void handlePaireDeRoi(String currentPlayer) {
         System.out.println(currentPlayer + " vole une carte à un autre joueur.");
-        volerCarte(currentPlayer);
+        stealCard(currentPlayer);
     }
 
     @Override

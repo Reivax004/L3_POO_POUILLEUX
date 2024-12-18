@@ -1,28 +1,19 @@
 package fr.pantheonsorbonne.miage.engine.net;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
-
+import java.util.*;
 import fr.pantheonsorbonne.miage.engine.PouilleuxGameEngine;
 import fr.pantheonsorbonne.miage.enums.PairType;
 import fr.pantheonsorbonne.miage.enums.Value;
 import fr.pantheonsorbonne.miage.game.Card;
 import fr.pantheonsorbonne.miage.game.Deck;
-import fr.pantheonsorbonne.miage.game.Symbol;
 import fr.pantheonsorbonne.miage.Facade;
 import fr.pantheonsorbonne.miage.HostFacade;
 import fr.pantheonsorbonne.miage.model.Game;
 import fr.pantheonsorbonne.miage.model.GameCommand;
-import fr.pantheonsorbonne.miage.PlayerFacade;
 
 public class PouilleuxHost extends PouilleuxGameEngine{
 
-    private static final int PLAYER_COUNT = 2;
+    private static final int PLAYER_COUNT = 3;
 
     private final HostFacade hostFacade;
     private final Set<String> players;
@@ -32,7 +23,7 @@ public class PouilleuxHost extends PouilleuxGameEngine{
     public PouilleuxHost(Deck deck,HostFacade hostFacade,
     Set<String> players, fr.pantheonsorbonne.miage.model.Game pouilleux) {
         
-        super(deck, 2);
+        super(deck, 3);
         this.hostFacade = hostFacade;
         this.players = players;
         this.pouilleux = pouilleux;
@@ -71,76 +62,81 @@ public class PouilleuxHost extends PouilleuxGameEngine{
     }
     @Override
     protected PairType discardPairs(String player, boolean imposeColor, String colorCurrent) {
-        hostFacade.sendGameCommandToPlayer(pouilleux, player, new GameCommand("EvaluateAPair"));
+        hostFacade.sendGameCommandToPlayer(pouilleux, player, new GameCommand("DiscardAPair", colorCurrent));
         GameCommand discPair = hostFacade.receiveGameCommand(pouilleux);
         PairType pairType = PairType.AUCUNE_PAIRE;
-        List<Card> listEvaluate = new ArrayList(Card.stringToCards(discPair.body()));
+        List<Card> listPair = new ArrayList(Card.stringToCards(discPair.body()));
     
             if(imposeColor){
 
-                if(listEvaluate.get(0).getSymbol().getColor().equals(colorCurrent)){
+                if(listPair.size() != 0){
+
+                    if(listPair.get(0).getSymbol().getColor().equals(colorCurrent)){
                     
-                    if (listEvaluate.get(0).getValue().ordinal() > 4) {
-                        pairType = PairType.PAIRE_NORMALE;
-                    } else if (listEvaluate.get(0).getValue() == Value.DIX) {
-                        pairType = PairType.PAIRE_DE_DIX;
-                    } else if (listEvaluate.get(0).getValue() == Value.VALET) {
-                        pairType = PairType.PAIRE_DE_VALET;
-                    } else if (listEvaluate.get(0).getValue() == Value.DAME) {
-                        pairType = PairType.PAIRE_DE_DAME;
-                    } else if (listEvaluate.get(0).getValue() == Value.ROI) {
-                        pairType = PairType.PAIRE_DE_ROI;
-                    } else if (listEvaluate.get(0).getValue() == Value.AS) {
-                        pairType = PairType.PAIRE_D_AS;
-                        colorCurrent = listEvaluate.get(0).getSymbol().getColor();
+                        if (listPair.get(0).getValue().ordinal() > 4) {
+                            pairType = PairType.PAIRE_NORMALE;
+                        } else if (listPair.get(0).getValue() == Value.DIX) {
+                            pairType = PairType.PAIRE_DE_DIX;
+                        } else if (listPair.get(0).getValue() == Value.VALET) {
+                            pairType = PairType.PAIRE_DE_VALET;
+                        } else if (listPair.get(0).getValue() == Value.DAME) {
+                            pairType = PairType.PAIRE_DE_DAME;
+                        } else if (listPair.get(0).getValue() == Value.ROI) {
+                            pairType = PairType.PAIRE_DE_ROI;
+                        } else if (listPair.get(0).getValue() == Value.AS) {
+                            pairType = PairType.PAIRE_D_AS;
+                            colorCurrent = listPair.get(0).getSymbol().getColor();
+                        }
                     }
                 }
             }
             else{
-                if (listEvaluate.get(0).getValue().ordinal() > 4) {
-                    pairType = PairType.PAIRE_NORMALE;
-                } else if (listEvaluate.get(0).getValue() == Value.DIX) {
-                    pairType = PairType.PAIRE_DE_DIX;
-                } else if (listEvaluate.get(0).getValue() == Value.VALET) {
-                    pairType = PairType.PAIRE_DE_VALET; 
-                } else if (listEvaluate.get(0).getValue() == Value.DAME) {
-                    pairType = PairType.PAIRE_DE_DAME;
-                } else if (listEvaluate.get(0).getValue() == Value.ROI) {
-                    pairType = PairType.PAIRE_DE_ROI;
-                } else if (listEvaluate.get(0).getValue() == Value.AS) {
-                    pairType = PairType.PAIRE_D_AS;
-                    colorCurrent = listEvaluate.get(0).getSymbol().getColor();
+                if(listPair.size() != 0){
+                    if (listPair.get(0).getValue().ordinal() > 4) {
+                        pairType = PairType.PAIRE_NORMALE;
+                    } else if (listPair.get(0).getValue() == Value.DIX) {
+                        pairType = PairType.PAIRE_DE_DIX;
+                    } else if (listPair.get(0).getValue() == Value.VALET) {
+                        pairType = PairType.PAIRE_DE_VALET; 
+                    } else if (listPair.get(0).getValue() == Value.DAME) {
+                        pairType = PairType.PAIRE_DE_DAME;
+                    } else if (listPair.get(0).getValue() == Value.ROI) {
+                        pairType = PairType.PAIRE_DE_ROI;
+                    } else if (listPair.get(0).getValue() == Value.AS) {
+                        pairType = PairType.PAIRE_D_AS;
+                        colorCurrent = listPair.get(0).getSymbol().getColor();
+                    }
                 }
-            } 
+            }
+        if (pairType == PairType.PAIRE_D_AS) {
+            discardedPairs.addAll(listPair);
+        }
         return pairType;
     }
 
     @Override
     protected void pickOneCard(String currentPlayer, String nextPlayer) {
         hostFacade.sendGameCommandToPlayer(pouilleux, nextPlayer, new GameCommand("GiveACard"));
-        System.out.println(currentPlayer);
         GameCommand expectedCard = hostFacade.receiveGameCommand(pouilleux);
-        System.out.println("Le joueur a pioché "+expectedCard);
-        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("cardsForYou", expectedCard.body().toString()));
+        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("cardForYou",expectedCard.name()));
     }
     @Override
     protected boolean isWinner(String currentPlayer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isWinner'");
+        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("isWinner"));
+        GameCommand winner = hostFacade.receiveGameCommand(pouilleux);
+        if(Boolean.parseBoolean(winner.body()) == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
     }
-
+    
     @Override
     protected void WhoIsLooser() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'WhoIsLooser'");
+        hostFacade.sendGameCommandToAll(pouilleux, new GameCommand("WhoIsLooser"));
     }
-
-    @Override
-    protected String getHandString(String player) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getHandString'");
-    }
-
 
     @Override
     protected String getLastDiscardColor(String player) {
@@ -153,43 +149,59 @@ public class PouilleuxHost extends PouilleuxGameEngine{
 
     @Override
     protected void switchTwoCards(String currentPlayer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'switchTwoCards'");
+        List<String> playerList = new ArrayList<>(players);
+        Random rand = new Random();
+        int indexPlayer1 = rand.nextInt(playerList.size());
+        int indexPlayer2 = rand.nextInt(playerList.size()-1);
+        if(indexPlayer1 == indexPlayer2){
+            indexPlayer2++;
+        }
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer1), new GameCommand("GiveACard"));
+        GameCommand expectedCard1 = hostFacade.receiveGameCommand(pouilleux);
+        
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer2), new GameCommand("GiveACard"));
+        GameCommand expectedCard2 = hostFacade.receiveGameCommand(pouilleux);
+        
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer2), new GameCommand("cardForYou",expectedCard1.name()));
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer1), new GameCommand("cardForYou",expectedCard2.name()));
     }
 
     @Override
-    protected void volerCarte(String currentPlayer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'volerCarte'");
+    protected void stealCard(String currentPlayer) {
+        List<String> playerList = new ArrayList<>(players);
+        playerList.remove(currentPlayer);
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(playerList.size());
+        hostFacade.sendGameCommandToPlayer(pouilleux,  playerList.get(randomIndex), new GameCommand("GiveACard"));
+        GameCommand expectedCard = hostFacade.receiveGameCommand(pouilleux);
+        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("cardForYou",expectedCard.name()));
     }
 
     @Override
     protected void handlePaireDeDix(String currentPlayer, String nextPlayer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handlePaireDeDix'");
-    }
-
-    @Override
-    protected void handlePaireDAs(String currentPlayer, String color) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handlePaireDAs'");
+        System.out.println("Paire de 10! Le joueur suivant perd son tour.");
     }
 
     @Override
     protected void handlePaireDeDame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handlePaireDeDame'");
+        System.out.println("Paire de dame! Sens de jeu inversé.");
+    }
+
+    @Override
+    protected void handlePaireDAs(String currentPlayer, String color) {
+        System.out.println(currentPlayer + " impose une couleur: " + color + ".");
     }
 
     @Override
     protected void handlePaireDeRoi(String currentPlayer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handlePaireDeRoi'");
+        System.out.println(currentPlayer + " vole une carte à un autre joueur.");
+        stealCard(currentPlayer);
     }
 
     @Override
     protected void handlePaireDeValet(String currentPlayer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handlePaireDeValet'");
+        System.out.println(currentPlayer + " a fait echanger deux cartes entre deux joueurs.");
+        switchTwoCards(currentPlayer);
     }
+
 }

@@ -1,14 +1,13 @@
 package fr.pantheonsorbonne.miage.game;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import fr.pantheonsorbonne.miage.enums.Value;
-import fr.pantheonsorbonne.miage.game.Symbol;
+
 
 public class Card {
     private final Value value;
@@ -62,7 +61,6 @@ public class Card {
         int spaceIndex = str.indexOf(' ');
         int deIndex = str.indexOf(" de ");
         int parenIndex = str.indexOf('(');
-    
        
         String valuePart = str.substring(0, spaceIndex); 
         String symbolNamePart = str.substring(deIndex + 4, parenIndex - 1);
@@ -77,6 +75,17 @@ public class Card {
     
     private static Symbol stringToSymbol(String name, String color) {
         return new Symbol(name , color);
+    }
+    public static String commandToStringCard(String command) {
+        
+        int startIndex = command.indexOf("name=") + 5;
+        int endIndex = command.indexOf(", body=");
+        
+        if (startIndex != -1 && endIndex != -1) {
+            return command.substring(startIndex, endIndex).trim();
+        }
+        
+        return "";
     }
     
 }
