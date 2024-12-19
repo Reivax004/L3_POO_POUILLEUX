@@ -39,22 +39,22 @@ public class Deck {
             cards.set(randIndex, cards.get(i));
             cards.set(i, c);
         }
-    }   
+    }
 
     static public List<Card> getRandomCards(int nbPlayer) {
         int handSize;
-        handSize  = remainingCardCount / (nbPlayer - index);
-        index ++;
+        handSize = remainingCardCount / (nbPlayer - index);
+        index++;
 
         if (remainingCardCount >= handSize) {
             List<Card> hand = new ArrayList<Card>();
-            for( int i = remainingCardCount-1; i >= remainingCardCount - handSize ; i--){
+            for (int i = remainingCardCount - 1; i >= remainingCardCount - handSize; i--) {
                 hand.add(cards.get(i));
             }
             remainingCardCount -= handSize;
             return hand;
         }
         List<Card> vide = new ArrayList<Card>();
-        return  vide;
+        return vide;
     }
 }

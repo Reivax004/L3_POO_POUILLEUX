@@ -26,6 +26,4 @@ public class Symbol {
 
     public static final List<Symbol> ALL = List.of(COEUR, CARREAU, PIQUE, TREFLE);
 
-    
-    
 }

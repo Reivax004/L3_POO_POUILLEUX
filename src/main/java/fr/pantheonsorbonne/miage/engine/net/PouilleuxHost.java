@@ -11,18 +11,15 @@ import fr.pantheonsorbonne.miage.HostFacade;
 import fr.pantheonsorbonne.miage.model.Game;
 import fr.pantheonsorbonne.miage.model.GameCommand;
 
-public class PouilleuxHost extends PouilleuxGameEngine{
+public class PouilleuxHost extends PouilleuxGameEngine {
 
     private static final int PLAYER_COUNT = 3;
 
     private final HostFacade hostFacade;
     private final Set<String> players;
     private final Game pouilleux;
-    
-    
-    public PouilleuxHost(Deck deck,HostFacade hostFacade,
-    Set<String> players, fr.pantheonsorbonne.miage.model.Game pouilleux) {
-        
+
+    public PouilleuxHost(Deck deck, HostFacade hostFacade, Set<String> players, Game pouilleux) {
         super(deck, 3);
         this.hostFacade = hostFacade;
         this.players = players;
@@ -30,74 +27,52 @@ public class PouilleuxHost extends PouilleuxGameEngine{
     }
 
     public static void main(String[] args) {
-        //create the host facade
         HostFacade hostFacade = Facade.getFacade();
         hostFacade.waitReady();
 
-        //set the name of the player
         hostFacade.createNewPlayer("Host");
 
-        //create a new game of war
-        fr.pantheonsorbonne.miage.model.Game pouilleux = hostFacade.createNewGame("POUILLEUX");
+        Game pouilleux = hostFacade.createNewGame("POUILLEUX");
 
-        //wait for enough players to join
         hostFacade.waitForExtraPlayerCount(PLAYER_COUNT);
 
-        Deck deck = new Deck();
-
-        PouilleuxGameEngine host = new PouilleuxHost(deck, hostFacade,pouilleux.getPlayers(), pouilleux);
+        PouilleuxGameEngine host = new PouilleuxHost(new Deck(), hostFacade, pouilleux.getPlayers(), pouilleux);
         host.play();
         System.exit(0);
     }
+
     @Override
     protected List<String> getInitialPlayers() {
         return new ArrayList<>(this.pouilleux.getPlayers());
     }
-    
+
     @Override
     protected void giveCardsToPlayer(String playerName) {
         List<Card> hand = new ArrayList<>(Deck.getRandomCards(nbPlayer));
         System.out.println(Card.cardsToString(hand));
-        hostFacade.sendGameCommandToPlayer(pouilleux, playerName, new GameCommand("cardsForYou", Card.cardsToString(hand)));
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerName,
+                new GameCommand("cardsForYou", Card.cardsToString(hand)));
     }
+
     @Override
     protected PairType discardPairs(String player, boolean imposeColor, String colorCurrent) {
         hostFacade.sendGameCommandToPlayer(pouilleux, player, new GameCommand("DiscardAPair", colorCurrent));
         GameCommand discPair = hostFacade.receiveGameCommand(pouilleux);
         PairType pairType = PairType.AUCUNE_PAIRE;
-        List<Card> listPair = new ArrayList(Card.stringToCards(discPair.body()));
-    
-            if(imposeColor){
+        List<Card> listPair = new ArrayList<Card>(Card.stringToCards(discPair.body()));
 
-                if(listPair.size() != 0){
+        if (imposeColor) {
 
-                    if(listPair.get(0).getSymbol().getColor().equals(colorCurrent)){
-                    
-                        if (listPair.get(0).getValue().ordinal() > 4) {
-                            pairType = PairType.PAIRE_NORMALE;
-                        } else if (listPair.get(0).getValue() == Value.DIX) {
-                            pairType = PairType.PAIRE_DE_DIX;
-                        } else if (listPair.get(0).getValue() == Value.VALET) {
-                            pairType = PairType.PAIRE_DE_VALET;
-                        } else if (listPair.get(0).getValue() == Value.DAME) {
-                            pairType = PairType.PAIRE_DE_DAME;
-                        } else if (listPair.get(0).getValue() == Value.ROI) {
-                            pairType = PairType.PAIRE_DE_ROI;
-                        } else if (listPair.get(0).getValue() == Value.AS) {
-                            pairType = PairType.PAIRE_D_AS;
-                            colorCurrent = listPair.get(0).getSymbol().getColor();
-                        }
-                    }
-                }
-            }
-            else{
-                if(listPair.size() != 0){
+            if (listPair.size() != 0) {
+
+                if (listPair.get(0).getSymbol().getColor().equals(colorCurrent)) {
+
                     if (listPair.get(0).getValue().ordinal() > 4) {
                         pairType = PairType.PAIRE_NORMALE;
                     } else if (listPair.get(0).getValue() == Value.DIX) {
                         pairType = PairType.PAIRE_DE_DIX;
                     } else if (listPair.get(0).getValue() == Value.VALET) {
-                        pairType = PairType.PAIRE_DE_VALET; 
+                        pairType = PairType.PAIRE_DE_VALET;
                     } else if (listPair.get(0).getValue() == Value.DAME) {
                         pairType = PairType.PAIRE_DE_DAME;
                     } else if (listPair.get(0).getValue() == Value.ROI) {
@@ -108,6 +83,24 @@ public class PouilleuxHost extends PouilleuxGameEngine{
                     }
                 }
             }
+        } else {
+            if (listPair.size() != 0) {
+                if (listPair.get(0).getValue().ordinal() > 4) {
+                    pairType = PairType.PAIRE_NORMALE;
+                } else if (listPair.get(0).getValue() == Value.DIX) {
+                    pairType = PairType.PAIRE_DE_DIX;
+                } else if (listPair.get(0).getValue() == Value.VALET) {
+                    pairType = PairType.PAIRE_DE_VALET;
+                } else if (listPair.get(0).getValue() == Value.DAME) {
+                    pairType = PairType.PAIRE_DE_DAME;
+                } else if (listPair.get(0).getValue() == Value.ROI) {
+                    pairType = PairType.PAIRE_DE_ROI;
+                } else if (listPair.get(0).getValue() == Value.AS) {
+                    pairType = PairType.PAIRE_D_AS;
+                    colorCurrent = listPair.get(0).getSymbol().getColor();
+                }
+            }
+        }
         if (pairType == PairType.PAIRE_D_AS) {
             discardedPairs.addAll(listPair);
         }
@@ -118,21 +111,22 @@ public class PouilleuxHost extends PouilleuxGameEngine{
     protected void pickOneCard(String currentPlayer, String nextPlayer) {
         hostFacade.sendGameCommandToPlayer(pouilleux, nextPlayer, new GameCommand("GiveACard"));
         GameCommand expectedCard = hostFacade.receiveGameCommand(pouilleux);
-        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("cardForYou",expectedCard.name()));
+        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer,
+                new GameCommand("cardForYou", expectedCard.name()));
     }
+
     @Override
     protected boolean isWinner(String currentPlayer) {
         hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("isWinner"));
         GameCommand winner = hostFacade.receiveGameCommand(pouilleux);
-        if(Boolean.parseBoolean(winner.body()) == true){
+        if (Boolean.parseBoolean(winner.body()) == true) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
-        
+
     }
-    
+
     @Override
     protected void WhoIsLooser() {
         hostFacade.sendGameCommandToAll(pouilleux, new GameCommand("WhoIsLooser"));
@@ -152,18 +146,20 @@ public class PouilleuxHost extends PouilleuxGameEngine{
         List<String> playerList = new ArrayList<>(players);
         Random rand = new Random();
         int indexPlayer1 = rand.nextInt(playerList.size());
-        int indexPlayer2 = rand.nextInt(playerList.size()-1);
-        if(indexPlayer1 == indexPlayer2){
+        int indexPlayer2 = rand.nextInt(playerList.size() - 1);
+        if (indexPlayer1 == indexPlayer2) {
             indexPlayer2++;
         }
         hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer1), new GameCommand("GiveACard"));
         GameCommand expectedCard1 = hostFacade.receiveGameCommand(pouilleux);
-        
+
         hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer2), new GameCommand("GiveACard"));
         GameCommand expectedCard2 = hostFacade.receiveGameCommand(pouilleux);
-        
-        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer2), new GameCommand("cardForYou",expectedCard1.name()));
-        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer1), new GameCommand("cardForYou",expectedCard2.name()));
+
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer2),
+                new GameCommand("cardForYou", expectedCard1.name()));
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(indexPlayer1),
+                new GameCommand("cardForYou", expectedCard2.name()));
     }
 
     @Override
@@ -172,14 +168,15 @@ public class PouilleuxHost extends PouilleuxGameEngine{
         playerList.remove(currentPlayer);
         Random rand = new Random();
         int randomIndex = rand.nextInt(playerList.size());
-        hostFacade.sendGameCommandToPlayer(pouilleux,  playerList.get(randomIndex), new GameCommand("GiveACard"));
+        hostFacade.sendGameCommandToPlayer(pouilleux, playerList.get(randomIndex), new GameCommand("GiveACard"));
         GameCommand expectedCard = hostFacade.receiveGameCommand(pouilleux);
-        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer, new GameCommand("cardForYou",expectedCard.name()));
+        hostFacade.sendGameCommandToPlayer(pouilleux, currentPlayer,
+                new GameCommand("cardForYou", expectedCard.name()));
     }
 
     @Override
     protected void handlePaireDeDix(String currentPlayer, String nextPlayer) {
-        System.out.println("Paire de 10! Le joueur suivant perd son tour.");
+        System.out.println("Paire de 10! Le joueur suivant, " + nextPlayer + ", saute son tour.");
     }
 
     @Override
@@ -200,7 +197,7 @@ public class PouilleuxHost extends PouilleuxGameEngine{
 
     @Override
     protected void handlePaireDeValet(String currentPlayer) {
-        System.out.println(currentPlayer + " a fait echanger deux cartes entre deux joueurs.");
+        System.out.println(currentPlayer + " a fait échanger deux cartes entre deux joueurs.");
         switchTwoCards(currentPlayer);
     }
 
