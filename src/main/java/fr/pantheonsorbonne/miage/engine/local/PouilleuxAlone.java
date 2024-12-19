@@ -241,10 +241,6 @@ public class PouilleuxAlone extends PouilleuxGameEngine {
 
         List<String> otherPlayers = new ArrayList<>(playerCards.keySet());
         otherPlayers.remove(currentPlayer);
-        if (otherPlayers.isEmpty()) {
-            System.out.println("Pas de joueur à voler.");
-            return;
-        }
 
         String targetPlayer = otherPlayers.get(random.nextInt(otherPlayers.size()));
 
